@@ -457,17 +457,20 @@ static void tama_p1_draw_callback(Canvas* const canvas, void* cb_ctx) {
     furi_mutex_release(mutex);
 }
 
-static void tama_p1_input_callback(InputEvent* input_event, FuriMessageQueue* event_queue) {
-    furi_assert(event_queue);
+static void tama_p1_input_callback(InputEvent* input_event, void* context) {
+    furi_assert(context);
 
     TamaEvent event = {.type = EventTypeInput, .input = *input_event};
+
+    FuriMessageQueue* event_queue = (FuriMessageQueue*)context;
     furi_message_queue_put(event_queue, &event, FuriWaitForever);
 }
 
-static void tama_p1_update_timer_callback(FuriMessageQueue* event_queue) {
-    furi_assert(event_queue);
+static void tama_p1_update_timer_callback(void* context) {
+    furi_assert(context);
 
     TamaEvent event = {.type = EventTypeTick};
+    FuriMessageQueue* event_queue = (FuriMessageQueue*)context;
     furi_message_queue_put(event_queue, &event, 0);
 }
 
