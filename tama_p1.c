@@ -1,4 +1,5 @@
 #include <furi.h>
+#include <furi_hal_bus.h>
 #include <gui/gui.h>
 #include <input/input.h>
 #include <storage/storage.h>
@@ -711,6 +712,7 @@ static int32_t tama_p1_worker(void* context) {
         }
     }
     LL_TIM_DisableCounter(TIM2);
+    furi_hal_bus_disable(FuriHalBusTIM2);
     furi_mutex_release(mutex);
     return 0;
 }
@@ -753,6 +755,7 @@ static void tama_p1_init(TamaApp* const ctx) {
     if(ctx->rom != NULL) {
         // Init TIM2
         // 64KHz
+        furi_hal_bus_enable(FuriHalBusTIM2);
         LL_TIM_InitTypeDef tim_init = {
             .Prescaler = 999,
             .CounterMode = LL_TIM_COUNTERMODE_UP,
